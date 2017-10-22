@@ -1,0 +1,90 @@
+---
+title: "hw_6"
+author: "Holden Mitchell"
+date: "10/8/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 6
+##### Manual calculations 6-11, 6-39, 6-51, 6-58, 6-63
+
+
+#### 6-11
+
+
+```{r}
+sd = 4.6
+sample = 100
+mean = 32
+
+
+top = mean + 1.96 * (sd / sqrt(100))
+bottom = mean - 1.96 * (sd / sqrt(100))
+bottom
+top
+```
+95% interval = 31.0984 - 32.9016
+
+#### 6-39
+
+```{r}
+
+data = c(9.7,8.9,9.7,10.9,10.3,10.1,10.7,10.6,10.4,10.6,11.6,11.7,9.7,9.7,9.7,9.8,12,10.4,8.8,8.9,8.4,9.7,10.3,10,9.2)
+
+mean = mean(data)
+sd = sd(data)
+count = length(data)
+
+top = mean + 1.645 * (sd / sqrt(count))
+bottom = mean - 1.645 * (sd / sqrt(count))
+```
+
+9.763642 - 10.38036
+
+#### 6-51
+
+```{r}
+n = 1000
+p = .78
+q = .22
+
+top = p + 1.645 * sqrt( (p * q) / n )
+bottom = p - 1.645 * sqrt( (p * q) / n )
+bottom
+top
+```
+
+0.7585 - 0.8015
+
+#### 6-58
+
+```{r}
+n = 22
+s2 = 8
+upper = 10.3
+low = 35.5
+
+lower = ((n-1) * s2 / 35.5)
+high = ((n-1) * s2 / 10.3)
+
+```
+4.7324 - 16.3107
+
+
+#### 6-63
+
+```{r}
+z = 1.96
+p = 0.10
+q = 0.90
+b = 0.02
+
+n = z^2 * p * q / b^2
+n
+```
+
+865

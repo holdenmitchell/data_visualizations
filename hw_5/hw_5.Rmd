@@ -1,0 +1,121 @@
+---
+title: "hw_5"
+author: "Holden Mitchell"
+date: "10/3/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+# library(data.table)
+dir = getwd()
+setwd(dir)
+#file_path = 'code/msba/data_visualizations/hw_5/'
+```
+
+
+## Part 1: Reproduce this graphic from the Economist
+###### http://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html
+
+
+```{r}
+hdi_data = read.csv(paste(dir, 'hdi.csv', sep = '/'))
+corr_data = read.csv(paste(dir, 'corruption.csv', sep = '/'))
+data =  merge(hdi_data, corr_data)
+data$corruption = data$X2012_corruption / 10 
+
+
+
+pointsToLabel <- c("Russia", "Venezuela", "Iraq", "Myanmar", "Sudan",
+                   "Afghanistan", "Congo", "Greece", "Argentina", "Brazil",
+                   "India", "Italy", "China", "South Africa", "Spane",
+                   "Botswana", "Cape Verde", "Bhutan", "Rwanda", "France",
+                   "United States", "Germany", "Britain", "Barbados", "Norway", "Japan", "New Zealand", "Singapore", "Cuba")
+
+theme = theme(panel.border = element_blank(),
+          panel.grid = element_blank(),
+          panel.grid.major.y = element_line(color = "gray"),
+          axis.line.x = element_line(color = "gray"),
+          axis.text = element_text(face = "italic"),
+          legend.position = "top",
+          legend.direction = "horizontal",
+          legend.box = "horizontal",
+          legend.text = element_text(size = 8),
+          plot.title = element_text(size = 16, face = "bold")
+        )
+
+R2 <- summary(lm(hdi_2012 ~ corruption + log(corruption), data = data))$r.squared
+
+plot1 <- ggplot(data, aes(corruption, hdi_2012, color=region)) +
+  geom_point(shape = 1,
+               size = 2,
+               stroke = 1) + 
+  geom_smooth(aes(group=1), method='lm', formula=y~log(x), 
+                        se=FALSE, color='red') +
+  geom_text_repel(mapping = aes(label = country, alpha = labels),
+                data = transform(data,
+                                 labels = country %in% pointsToLabel),
+                point.padding = .5) +
+  scale_x_continuous(name = "Corruption Perceptions Index, 2011 (10=least corrupt)",
+                     limits = c(.9, 10.5),
+                     breaks = 1:10) +
+  scale_y_continuous(name = "Human Development Index, 2011 (1=Best)",
+                     limits = c(0.2, 1.0),
+                     breaks = seq(0.2, 1.0, by = 0.1)) +
+  scale_color_manual(name = "",
+                     values = c("#24576D",
+                                "#099DD7",
+                                "#28AADC",
+                                "#248E84",
+                                "#F2583F",
+                                "#96503F"),
+                     guide = guide_legend(nrow = 1)) +
+    scale_alpha_discrete(range = c(0, 1),
+                         guide = FALSE) +
+    ggtitle("Corruption and human development") +
+    theme_minimal() +
+    theme 
+  
+plot1
+
+ggsave('economist.png', plot = plot1)
+```
+
+## Part 2
+###### Use data available and ggplot + geom_point() + facet_wrap(~left) (2 graphs)
+
+
+```{r}
+
+data = data.frame(state.x77)
+data$Region = state.region
+
+plot2 = ggplot(data, aes(Murder, Income, color=Region)) +
+  geom_point(size = 2,
+               stroke = 1) +
+  theme_minimal() +
+  theme 
+
+ggsave('murder_income.png', plot = plot2)
+```
+
+
+```{r}
+
+plot3 = ggplot(data, aes(Murder, Income, color=Region)) +
+  geom_point(size = 2,
+               stroke = 1) +
+  facet_wrap(~Region) +
+  theme_minimal() +
+  theme
+
+plot3
+
+ggsave('murder_income_region.png', plot = plot3)
+```

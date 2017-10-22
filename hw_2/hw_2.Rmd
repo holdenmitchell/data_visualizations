@@ -1,0 +1,328 @@
+---
+title: "Homework 2"
+author: "Holden Mitchell"
+date: "9/5/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(reshape2)
+library(ggthemes)
+dir = getwd()
+setwd(dir)
+file_path = 'code/msba/data_visualizations/hw_2/'
+dir
+```
+
+### Homework 2
+###### Due Sept. 10th (Sunday)
+
+* 1-17 (percentile, quartile), 1-33 (variance, st. deviation), 1-34 (spread of observations), 1-42 (R), 1-44 (R), 1-49 (R), 1-70 (use years 2012-2016, group), 1-77 (R), 1-79 (R)
+
+* 2-31, 2-61
+
+#### 1-17
+
+Find the lower, middle, and upper quartiles of this data et. Also find the 10th, 15th, and 65th percentiles. What is the interquartile range?
+
+```{r}
+data <- c(128, 121, 134, 136, 136, 118, 123, 109, 120, 116, 125, 128, 121, 129, 130, 131, 127, 119, 114, 134, 110, 136, 134, 125, 128, 123, 128, 133, 132, 136, 134, 129, 132)
+quantile(data, c(.25, .50, .75, .10, .15, .65))
+```
+
+* Lower Quartile: 121.0
+* Middle Quartile: 128
+* Upper Quartile: 133.5 (133.0 in R)
+* 10th Percentile: 114.8 (116.4 in R)
+* 15th Percentile: 118.1 (118.8 in R)
+* 65th Percentile: 131.1 
+* Interquartile Range: 133.5 - 121 = 12.5
+
+* The numbers are slightly different when calculated with R and I'm not sure what the discrepancy is.
+
+#### 1-33 (Use data from problem 1-17)
+* Find the range, the variance, and the standard deviation of the data set in problem 1-13
+
+```{r}
+summary(data)
+var(data)
+sd(data)
+```
+* Range: 27
+* Variance: 49.27471
+* Standard Deviation: 7.019595
+
+#### 1-34
+
+Q: Explain why we need measures of variability and what information these measures convey.
+
+A: The variability is needed to show how spread out the data points are. It measures the distribution of the data.
+
+#### 1-42
+
+```{r}
+raw_data <- c(3.45, 4.52, 5.41, 6.00, 5.97, 7.18, 1.12, 5.39, 7.03, 10.25, 11.45, 13.21, 12.00, 14.05, 2.99, 3.28, 17.10, 19.28, 21.09, 12.11, 5.88, 4.65, 3.99, 10.10, 23.00, 15.16, 20.16)
+data = data.frame(v1=raw_data)
+```
+
+
+a. Draw an ogive
+
+```{r}
+ggplot(data,aes(x=v1)) + stat_ecdf(geom ="point") + ylab("") + stat_ecdf(geom ="line")
+```
+
+b. Draw a column graph
+
+```{r}
+hist(data$v1, xlim = c(0, max(data$v1) + 10), col = "Steelblue3", right = F)
+```
+
+#### 1-44 (fix histogram to 1 per value)
+
+```{r}
+data <- c(38.9,32.7,31.1,27.4,25.7,21.6,17.6,17.4,15.0,13.9)
+summary(data)
+sd(data)
+```
+
+Find mean, median, and standard deviation
+
+* Mean = 24.13
+* Median = 23.65
+* Standard Deviation = 8.40
+
+Draw a bar graph
+
+```{r}
+ggplot(data.frame(data),aes(seq_along(data),data))+geom_bar(stat="identity")
+```
+
+#### 1-49
+
+Find $\mu$, $\sigma$, $\sigma^2$, draw a box plot, and find the mode and any outliers
+
+```{r}
+  europe <- c(122, 140, 127, 107, 120, 101)
+  asia <- c(127,127,127,127,116,120,128,140)
+  north_america <- c(140,127,140,130,124)
+  
+  all_data <- c(europe, asia, north_america)
+  summary(all_data)
+  sd(all_data)
+  sd(all_data)^2
+```
+* $\mu$ = 125.8
+* $\sigma$ = 10.50703
+* $\sigma^2$ = 110.3977
+* Mode = 127
+
+Box Plot
+```{r}
+fram = data.frame(y=c(europe,asia,north_america),x=c(rep("Europe",length(europe)),rep("Asia",length(asia)),rep("North America",length(north_america))))
+boxplot(y~x, data = fram)
+```
+
+* Outliers: Asia - 140, 116
+
+#### 1-70 (Use years 2012-2016)
+
+1. Consumer Data
+Get data for 2012-2016
+```{r}
+consumer <- read.csv(paste(dir, '/cpi.csv', sep = ''), header = TRUE)
+```
+
+Make a time plot
+```{r}
+new_consumer <- melt(consumer, id.vars=c("Item.and.group"))
+
+ggplot(data=new_consumer, aes(x = variable, y = value, group=Item.and.group)) +
+  geom_line() +
+  geom_point()
+```
+
+Discuss seasonal patterns
+
+* Seasonal patterns are difficult to discuss on a yearly data set, therefore yearly patterns will be discussed.
+
+Answer: There was a dip below 1 for the years 2014 and 2015 with a strong rebound in 2016.
+
+2. Average Gas Price Data
+
+Average Gas Price Data
+```{r}
+gas_price <- read.csv(paste(dir, '/average_gas_prices.csv', sep = ''), header = TRUE)
+```
+Time Plot
+* Comparison could not be made because the CPI data given was yearly and the gas price data was monthly
+```{r}
+new_gas_price <- melt(gas_price, id.vars=c("Year"))
+new_gas_price$yyyy_mm = paste(new_gas_price$Year, match(new_gas_price$variable,month.abb), sep="-")
+
+ggplot(data=new_gas_price, aes(x = variable, y = value, group=Year, color=Year)) +
+  geom_line() +
+  geom_point() + 
+  theme_classic()
+```
+
+#### 1-77
+
+Use the following statement to answer the questions:
+> GPA percentiles for accepted transfer students: 
+> 25th percentile, 3.68;
+> 75th percentile, 3.98.
+> Number of applications, 500;
+> Number accepted, 91.
+
+a. What is the percentage of accepted transfer students whose grade point average (GPA) is below 3.68?
+Answer: 25%
+
+b. What is the percentage of accepted transfer students with a GPA below 3.98?
+Answer: 75%
+
+c. What is the percentage of accepted transfer students with GPA above 3.98?
+Answer: 25%
+
+d. What is the percentage of accepted transfer students with GPA between 3.68 and 3.98?
+Answer: 50%
+
+e. An accepted transfer student with a straight 4.0 is in what quartile?
+Answer: Upper
+
+f. About how many accepted students per year are in the uppermost quartile?
+Answer: 22-23 Students
+
+g. Suppose that only two of the 91 accepted transfer students have a GPA below 3.4. What is the percentile of the distribution of GPA for accepted transfer students that they represent?
+Answer: 2%
+
+h. Roughly speaking, if the applying student has a GPA of 3.7, what are her chances of transferring successfully to the school?
+Answer: About 4.5%
+
+#### 1-79 (No longer needed on most recent homework)
+
+1. Download the data on the cumulative number of AIDS cases reported in the US and its age-range breakdown. Draw a pie chart.
+
+```{r}
+
+aids_age <- read.csv(paste(dir, '/hiv_age.csv', sep = ''), header = TRUE)
+ggplot(aids_age, aes(y = Cumulative, x = "", fill = Age.at.diagnosis)) + 
+  geom_col(width = 1) + 
+  coord_polar(theta = "y")
+  
+```
+
+2. Download the race/ethnicity breakdown of the data. Draw a pie chart of the data.
+
+
+```{r}
+aids_race <- read.csv(paste(dir, '/hiv_race.csv', sep = ''), header = TRUE)
+head(aids_race)
+ggplot(aids_race, aes(y = Cumulative, x = "", fill = Race)) + 
+  geom_col(width = 1) + 
+  coord_polar(theta = "y")
+```
+
+* Data Source: [CDC HIV Report](https://www.cdc.gov/hiv/pdf/library/reports/surveillance/cdc-hiv-surveillance-report-us.pdf) Table 2a
+
+#### 2-31
+
+```{r}
+insurance_data <- read.csv(paste(dir, '/2_31_data.csv', sep = ''), header = TRUE)
+head(insurance_data)
+col_sums <- c(sum(insurance_data$East),sum(insurance_data$South), sum(insurance_data$Midwest), sum(insurance_data$West))
+row_sums <- rowSums(insurance_data[,2:5])
+```
+
+Compute column totals and row totals. What do they mean?
+```{r}
+col_sums
+```
+Represents the total number of insurance claims per region.
+
+```{r}
+row_sums
+```
+Represents the total number of insurance claims per type of claim.
+
+a. If a bill is chosen at random, what is the probability that it is from the Midwest?
+
+```{r}
+midwest_probabilty = (100 * col_sums[3] / sum(col_sums))
+midwest_probabilty
+```
+
+b. What is the probability that a randomly chosen bill is from the East?
+
+```{r}
+east_probability = (100 * col_sums[1] / sum(col_sums))
+east_probability
+```
+
+c. What is the probability that a randomly chosen bill is either from the Midwest or from the South? What is the relation between these two events?
+
+```{r}
+mid_south_probability = (100 * (col_sums[2] + col_sums[3]) / sum(col_sums))
+mid_south_probability
+```
+
+Mutually exclusive
+
+d. What is the probability that a randomly chosen bill is for hospitalization?
+
+```{r}
+hospital_probability = (100 * (row_sums[1]) / sum(row_sums))
+hospital_probability
+```
+
+e. Given that a bill is for hospitalization, what is the probability that is is from the South?
+
+```{r}
+south_hospital_probability = (100 * (128) / row_sums[1])
+south_hospital_probability
+```
+
+f. Given that a bill is from the East, what is the probabilty that it is for a physician's visit?
+
+```{r}
+east_physician_probability = (100 * (233) / col_sums[1])
+east_physician_probability
+```
+
+g. Given that a bill is for outpatient treament, what is the probabilty that it is from the West?
+
+```{r}
+outpatient_west = (100 * (99) / row_sums[3])
+outpatient_west
+```
+
+h. What is the probabilty that a randomly chosen bill is either from the East or for outpatient treament (or both)?
+
+```{r}
+east_and_outpatient = (100 * (row_sums[3] + col_sums[1] - 100) / sum(col_sums))
+east_and_outpatient
+```
+
+i. What is the probabilty that a randomly selected bill is either for hospitalization or from South (or both)?
+
+```{r}
+hospital_and_south = (100 * (row_sums[1] + col_sums[2] - 128) / sum(col_sums))
+hospital_and_south
+```
+
+#### 2-61
+
+```{r}
+high = 0.6 * .15
+medium = 0.3 * .7
+low = 0.1 * .15
+
+high / (high + medium + low)
+```

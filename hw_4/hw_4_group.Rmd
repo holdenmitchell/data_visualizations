@@ -1,0 +1,101 @@
+---
+title: "hw_4_group"
+author: "Holden Mitchell"
+date: "9/25/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+customer = c(1,2,3,4)
+quantity = c(12, 8, 5, 2)
+price = c(57810, 8640540, 97800, 4015000)
+exchange_mean = c(1.41, 0.00904, 0.824, 0.0211)
+exchange_sd = c(0.041, 0.00045, 0.0342, 0.00083)
+data = data.frame(customer = customer, quantity = quantity, price = price, exchange_mean = exchange_mean, exchange_sd = exchange_sd)
+data
+```
+
+1. Mean, Variance, and Standard Deviation in US $
+
+```{r}
+data$us_dollars = data$price * data$exchange_mean
+data$us_sd = data$price * data$exchange_sd
+data$revenue = data$quantity * data$us_dollars
+data$revenue_sd = data$quantity * data$us_sd
+mean = sum(data$revenue)
+sd = sum(data$revenue_sd)
+var = sum(data$revenue_sd)^2
+mean
+```
+
+Mean: 2175398
+Variance: 6878573172
+Standard Deviation: 82937.16
+
+2.
+
+```{r}
+pnorm(2250000, mean = mean, sd = sd, lower.tail = FALSE)
+```
+
+3.
+
+```{r}
+pnorm(2150000, mean = mean, sd = sd)
+```
+4. 
+
+```{r}
+pnorm(2150000, mean = mean, sd = sd, lower.tail = FALSE)
+```
+* There is a 62% chance that we will exceed that revenue.
+
+5. 
+
+* Based on the fact that the odds are favored towards us making more than the $2,150,000, I would suggest that we not take the offer.
+
+6.
+
+I would say the the sales manager is more risk-averse because though the odds are in the favor of beating that revenue, there is still a chance that the company could make less, while the buyout is a sure thing.
+
+7.
+
+```{r}
+pnorm(2150000, mean = mean, sd = sd)
+```
+
+8.
+
+```{r}
+pnorm(2039000, mean = mean, sd = sd)
+
+value_at_risk = 2150000 - 2039000
+value_at_risk
+```
+
+9. 
+
+```{r}
+expected_profit = mean - 2150000
+expected_profit
+```
+
+
+10.
+
+```{r}
+value_at_risk / expected_profit
+```
+Based on the bank's definition of value at risk and the expected profit, the bank is facing a high amount of risk with this deal.
+
+11.
+
+By converting the currencies, you open yourself up to more risk because of the possibility that the currencies decrease.
+
+12.
+
+No it is not.

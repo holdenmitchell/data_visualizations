@@ -1,0 +1,166 @@
+---
+title: "test_1"
+author: "Holden Mitchell"
+date: "10/10/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(ggplot2)
+library(ggthemes)
+library(vcd)
+dir = getwd()
+setwd(dir)
+```
+
+# Exam 1
+
+## Statistics Using R
+
+##### 1a) 9 jobs. 48% probability.
+
+```{r}
+n = 9
+prob = 0.48
+
+pbinom(3, 9, 0.48, lower.tail = FALSE)
+```
+
+* Answer: Probability of 3+ offers = .70519 or 70.519%
+
+##### 1b) 95% confident of 3+ offers. How many jobs should she apply for?
+
+```{r}
+mean = 3
+z = 1.96
+
+pbinom(3, 14, 0.48, lower.tail = FALSE)
+```
+
+* Answer: She should apply for 14 jobs
+
+##### 2) 
+* Option A: < 8,500 guests
+* Option B: < 9,400 guests
+* Option C: < 11,800 guests
+
+mean = 10,000
+sd = 1,200
+Which option has a 7% chancce of being too small?
+
+```{r}
+
+pnorm(8500, mean=10000, sd=1200, lower.tail=FALSE)
+
+pnorm(9400, mean=10000, sd=1200, lower.tail = FALSE)
+
+pnorm(11800, mean = 10000, sd = 1200, lower.tail = FALSE)
+```
+
+* Answer: Option C has approximately a 7% chance of being too small 
+
+
+## Graphics Using R
+
+#### 1) Twitteraccount
+
+```{r}
+twitter = read.csv(paste(dir, 'twitteraccount.csv', sep = '/'))
+```
+
+##### A Graph 1
+
+Use geom_boxplot and color to differentiate between journalist and news
+
+```{r}
+ggplot(twitter, aes(x = category, y = followers, color = category)) +
+  geom_boxplot() +
+  theme_minimal() +
+  ggtitle("Journalist and News Followers")
+```
+
+```{r}
+ggplot(twitter, aes(x = category, y = following, color = category)) +
+  geom_boxplot() +
+  theme_minimal() +
+  ggtitle("Journalist and News Following")
+```
+
+
+##### B Graph 2
+
+```{r}
+ggplot(twitter, aes(x = following, y = followers, color = category)) +
+  geom_point() +
+  scale_y_continuous(name = "Followers",
+                     limits = c(0, 600000),
+                     breaks = c(100000, 200000, 300000, 400000, 500000, 600000),
+                     labels = c('100K', '200K', '300K', '400K', '500K', '600K')) +
+  theme_minimal()
+```
+
+##### C Graph 3
+
+
+```{r}
+
+ggplot(twitter, aes(x = following, y = followers, color = category)) +
+  geom_point() +
+  scale_y_continuous(name = "Followers",
+                     limits = c(0, 600000),
+                     breaks = c(100000, 200000, 300000, 400000, 500000, 600000),
+                     labels = c('100K', '200K', '300K', '400K', '500K', '600K')) +
+  scale_x_continuous(name = 'Following') + 
+  facet_wrap(~category) +
+  theme_minimal()
+```
+
+
+### 2) Bus Breakdown and Delays
+
+```{r}
+breakdowns = read.csv(paste(dir, 'Bus_Breakdown_and_Delays.csv', sep = '/'))
+data = data.frame(Reason = breakdowns$Reason, Boro = breakdowns$Boro, Notified = breakdowns$Has_Contractor_Notified_Parents)
+
+mosaic(table(data), shade = TRUE, legend = TRUE)
+```
+
+##### A Couple of insights from the mosaic chart
+* Blue tiles indicate a greater frequency, so Flat Tires have the highest frequency of the Reasons.
+* Queens rarely has accidents compared to Brooklyn and Manhattan
+* Queens has the highest frequency of Flat Tires
+* Weather Conditions tend to affect Brooklyn the most
+* Parents are less likely to be Notified of Accidents
+
+
+#### 3) Hedging
+
+```{r}
+
+hedging = read.csv(paste(dir, 'hedging.csv', sep='/'))
+
+data = data.frame(mean_income = hedging$family_income_mean, mean_rent = hedging$gross_rent_mean, mean_owner_cost = hedging$owner_cost_mean, mean_household_income = hedging$household_income_mean)
+```
+
+
+##### Graph A - Scatterplot Matrix
+
+
+```{r}
+pairs(data)
+```
+
+###### Interpretation
+* Mean Income and Mean Household Income are very strongly correlated
+* All the charts are positively correlated, so this means that as one variable increases, so does the other variable
+
+
+##### Graph B - SmoothScatter
+
+```{r}
+smoothScatter(hedging$household_income_mean, hedging$gross_rent_mean)
+```

@@ -1,0 +1,330 @@
+---
+title: "hw_4"
+author: "Holden Mitchell"
+date: "9/23/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(reshape2)
+library(ggthemes)
+library("scatterplot3d")
+library(corrgram)
+library(car)
+# library(rgl)
+dir = getwd()
+setwd(dir)
+file_path = 'code/msba/data_visualizations/hw_2/'
+dir
+```
+
+# Homework 4
+
+### Section 1: (6 graphs)
+* High-density scatter plots (plus Smooth Scatter)
+
+High Density
+```{r}
+df <- data.frame(x = rnorm(5000),y=rnorm(5000))
+ggplot(df,aes(x=x,y=y)) + geom_point(alpha = 0.3)
+```
+
+* Smooth Scatter
+
+```{r}
+smoothScatter(df$x, df$y)
+```
+
+* 3D Scatter Plot (plus interactive)
+
+```{r}
+data(iris)
+head(iris)
+scatterplot3d(iris[,1:3], pch = 16, color="steelblue")
+```
+* Interactive 
+
+Ran into an issue due to X11 not being on my MAC, which is a dependency of the library rgl. I tried to instal X12 to see if that would work but had no luck. I think that the code below should work, but I did not test it since I could not load the rgl library.
+
+```{r}
+# scatter3d(iris[,1:3], pch = 16, color="steelblue")
+```
+
+* Bubble Plot
+
+```{r}
+set.seed(53)
+x_var <- rnorm( n = 15, mean = 5, sd = 2)
+y_var <- x_var + rnorm(n = 15, mean = 5, sd =4)
+size_var <- runif(15, 1,10)
+
+df.test_data <- data.frame(x_var, y_var, size_var)
+
+ggplot(data=df.test_data, aes(x=x_var, y=y_var)) +
+  geom_point(aes(size=size_var)) +
+  scale_size_continuous(range=c(2,15)) +
+  theme(legend.position = "none")
+
+```
+
+
+* Corrgram
+ 
+```{r}
+
+corrgram(mtcars, order=TRUE, lower.panel=panel.shade,
+  upper.panel=panel.pie, text.panel=panel.txt,
+  main="Car Milage Data in PC2/PC1 Order")
+ 
+```
+ 
+### Section 2:
+* 4-3, 4-6, 4-31, 4-65
+
+##### 4-3
+
+##### Find the following probabilities:
+
+* P(-1 < Z < 1) = 0.6826
+```{r}
+pnorm(1) - pnorm(-1)
+```
+
+* P(-1.96 < Z < 1.96) = 0.95
+
+```{r}
+pnorm(1.96) - pnorm(-1.96)
+```
+
+* P(-2.33 < Z < 2.33) = 0.9802
+
+```{r}
+pnorm(2.33) - pnorm(-2.33)
+```
+
+##### 4-6
+
+Find two values, equidistant from 0 on either side, such that the probability that a standard normal random variable will be between them is 0.4
+
+```{r}
+pnorm(.5244) - pnorm(-0.5244)
+```
+Answer: -.5244, .5244
+
+##### 4-31
+
+Let X be a normally distributed random variable with mean 410 and standard deviation 2. Find the probability that X will be between 407 and 415
+
+```{r}
+pnorm(415, mean=410, sd=2) - pnorm(407, mean=410, sd=2) 
+```
+
+* 0.927
+
+##### 4-65
+ 
+Normally distributed.
+
+```{r}
+means = c(5780, 641, 712)
+standard_deviations = c(142,78,72)
+rest_data = data.frame(names = c("Eat In", "Takeout", "Bar"), mean=means, standard_deviation=standard_deviations, variance=standard_deviations^2)
+```
+
+
+* a. Will the total revenue on a day be normally distributed? 
+
+Answer: Yes
+ 
+* b. What are the mean and standard deviation of the total revenue on a particular day?
+
+```{r}
+sum(rest_data$mean)
+sqrt(sum(rest_data$variance))
+```
+
+Mean = 7133
+sd = 177.29
+
+* c. What is the probability that the revenue will exceed $7,000 on a particular day?
+
+```{r}
+pnorm(7000, mean=7133, sd=177.29, lower.tail = FALSE)
+```
+
+0.7734
+ 
+### Section 3:
+* 5-8, 5-13, 5-26, 5-39, 5-65
+
+##### 5-8
+
+Compute an estimate of the mean amount of all accounts receivable. Give an estimate of the variance of all the amounts.
+
+```{r}
+accounts = c(87.5, 123.1, 45.3, 52.22, 213, 155, 39, 76.05, 49.8, 99.99, 132, 102.11)
+
+mean(accounts)
+var(accounts)
+```
+
+* Mean = 97.923
+* Variance = 2686.38
+
+##### 5-13
+
+mean = 3.9%
+sd = 1.2%
+sample = 36
+
+If a random sample of 36 companies in the S&P 500 is selected, what is the probability that their average return for this period will be between 7% and 4%?
+
+```{r}
+mean = 3.9
+sd = 1.2
+upper = 7
+lower = 4
+
+num = (4 - 3.9) / (1.2 / sqrt(36))
+z1 = pnorm(num, lower.tail = FALSE)
+num = (7 - 3.9) / (1.2 / sqrt(36))
+z2 = pnorm(num, lower.tail = FALSE)
+z1 - z2
+```
+
+Answer: 0.3085
+
+##### 5-26
+
+```{r}
+mean = 3.4
+sd = 1.5
+sample = 100
+```
+What is the probability  >= 3.6?
+
+```{r}
+num = (3.6 - mean) / (sd / sqrt(100))
+pnorm(num, lower.tail = FALSE)
+```
+
+Answer: 0.0912
+
+##### 5-39
+
+```{r}
+data_points = c(34,51,40,38,47,50,52,44,37)
+```
+
+* a. What number?
+* What is the minimized?
+* How many degrees of freedom?
+* Calculate the mean squared deviation:
+
+```{r}
+mean(data_points)
+var(data_points)*(9-1)
+sd(data_points)^2
+```
+mean = 43.667
+SSD = 358
+df = 1
+MSD = 44.75
+
+* b. What three number?
+* Minimized SSD?
+* Degrees of freedom?
+* MSD?
+
+```{r}
+data_a<-c(34,51,40,38)
+data_b<-c(47,50,52)
+data_c<-c(44,37)
+
+data_points = c(mean(data_a), mean(data_b), mean(data_c))
+data_points
+ssd = sum(var(data_a)*(4-1),
+var(data_b)*(3-1),
+var(data_c)*(2-1))
+ssd
+ssd / (9-3)
+```
+
+Use means: 40.75, 49.667, 40.5
+SSD = 195.92
+df = 3
+MSD = 32.65
+
+* c. What 9 numbers?
+* Minimized SSD?
+* Degrees of freedom?
+* MSD?
+
+Use each number
+SSD = 0
+df = 0
+MSD = 0
+
+* d. With respect to 50
+
+```{r}
+data_points = c(34,51,40,38,47,50,52,44,37)
+data_new = (50 - data_points)
+ssd = sum(data_new^2)
+ssd
+ssd/9
+```
+
+SSD = 719
+df = 9
+MSD = 79.89
+
+##### 5-65
+
+```{r}
+values = c(10.10, 6.94, 13.55, 13.58, 21.42)
+```
+
+* a. Compute the mean and standard deviation of the prices quoted above.
+
+```{r}
+mean(values)
+sd(values)
+```
+Mean = 13.118
+sd = 5.3991
+
+* b. 36 banks. average > $1.00 or average < $1.00
+
+```{r}
+m = mean(values)
+s = sd(values)
+
+num = (m+1 - m) / (s / sqrt(36))
+top = pnorm(num, lower.tail = FALSE)
+
+num = (m-1 - m) / (s / sqrt(36))
+bottom = pnorm(num)
+
+top + bottom
+```
+
+Answer: 0.2664
+
+* c. 50 bank corporations. Probability average is above $12?
+
+```{r}
+num = (12 - m) / (s / sqrt(50))
+pnorm(num, lower.tail = FALSE)
+```
+
+Answer: 0.9284
+
+* d. Criticize all the assumptions you have had to make in solving the previous parts of this problem. Explain your contentions.
+
+It is foolish to assume that 36 much less 50 bank corporations could rely on the mean and standard deviation of a random sample of 5.
