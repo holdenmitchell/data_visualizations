@@ -12,51 +12,180 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Homework 7
 
 7-1,2,3,4,5, 7-7, 7-16, 7-27, 7-53 (need R codes if available)
-Make sure Power Curve works (need codes and graph)
-Practice Calculating Beta (pp. 246-248)(need PowerPoint slides to present in class)
+Make sure Power Curve works (need codes and graph) script in downloads
+Practice Calculating Beta (pp. 246-248) (need PowerPoint slides to present in class)
 
 ##### 7-1
 
-Ho: /mu/ <= $3.75
-H1: /mu/ > $3.75
+* H<sub>o</sub>: \(\mu \) <= $3.75
+* H<sub>1</sub>: \(\mu \) > $3.75
 
 ##### 7-2
 
+* H<sub>o</sub>: \(\mu \) <= 200 ppm 
+* H<sub>1</sub>: \(\mu \) > 200 ppm
+
 ##### 7-3
 
-Ho: p = 0.8
-H1: p != 0.8
+* H<sub>o</sub>: p = 0.8
+* H<sub>1</sub>: p \(\neq \) 0.8
 
 ##### 7-4
 
+* H<sub>o</sub>: \(\mu \) >= $49160
+* H<sub>1</sub>: \(\mu \) < $49160
+
 ##### 7-5
 
-Ho: u <= 12
-H1: u > 12
+* H<sub>o</sub>: \(\mu \) <= 12
+* H<sub>1</sub>: \(\mu \) > 12
 
 ##### 7-7
 
 a. Null, there are no weapons
-b. Type I error: rejuecting the null hypothesis and concluding there are weapons when there are no weapons
-c. Type II error would be more costly in terms of endangering lives. Type I would just be an inconvenience for the passenger.
-d. Largest value of /alpha/ possible.
-e. If the sensitivity of the detectors is increased
-f. If /alpha/ is to be increased, then the sensitivity of the dectectors should also be increased to compensate for the higher
+* H<sub>0</sub>: No weapons
+* H<sub>1</sub>: Weapons
+b. 
+* Type I error: rejecting the null hypothesis and concluding there are weapons when there are no weapons.
+* Type II error: Concluding that there are not weapons when there actually are weapons.
+c. 
+* Type II error would be more costly in terms of endangering lives because a passenger would have weapons. 
+* Type I would just be an inconvenience for the passenger because they do not have weapons
+d. I would recommend the largest value of \(\alpha \) possible.
+e. If the sensitivity of the detectors is increased, then the probability of a Type I error would increase and the probability of the Type II error would decrease.
+f. If \(\alpha \) is increased, then the sensitivity of the dectectors should also be increased.
 
 ##### 7-16
 
+
+
+```{r}
+france = 65
+n = 100
+average = 71
+sd = 46
+```
+
+* H<sub>o</sub>: France = 65
+* H<sub>1</sub>: France \(\neq \) 65
+
+a. Using \(\alpha \) = 0.05, conduct the appropriate test (95% confidence test)
+
+```{r}
+t = (france - average) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+Fail to reject H<sub>o</sub>
+
+b. Using \(\alpha \) = 0.01, conduct the appropriate test (99% confidence test)
+
+Fail to reject H<sub>o</sub>
+
+c. What assumptions are you making?
+
+* I am assuming that the population is normal and I think that is a valid assumption.
+
+d. State your conclusions in a complete sentence
+
+* I fail to reject the null hypothesis based on the assumption that the population is normal.
+
 ##### 7-27
 
-a. geographical differences, cultural differences, income differences.
-b. depending on the number of breakdowns, one sample may not be large enough
-c. t = 25.8415, p-value= 0.000 Reject at both /alpha/
-d. t = 70.7107, Teject at both /alpha/
-e. t = 56.8458, Reject at both /alpha/
-f. t = very large, Reject at both /alpha/
-g. t = -8.2292, Teject at both /alpha/
+a. I would consider differences based on geography, culture, income, demographics, and others.
+b. A single sample might not be large enough if it is broken down several times.
+c. 
+```{r}
+u = 158.8
+n = 5000
+xbar = 178.9
+sd = 55
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = 25.8415, p-value= 0.000 Reject at both \(\alpha \)
+
+d. 
+
+```{r}
+u = 25.5
+n = 5000
+xbar = 41.2
+sd = 15.7
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = 70.7107, Reject at both \(\alpha \)
+
+e. 
+
+```{r}
+u = 4.5
+n = 5000
+xbar = 8.6
+sd = 5.1
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = 56.8458, Reject at both \(\alpha \)
+
+f.
+
+```{r}
+u = 2.6
+n = 5000
+xbar = 1.1
+sd = .9
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = 117.8511, Reject at both \(\alpha \)
+
+g. 
+
+```{r}
+u = 200000000
+n = 25
+xbar = 121000000
+sd = 48000000
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = -8.2292, Reject at both \(\alpha \)
 
 ##### 7-53
 
-Ho: u >= 50
-H1: u < 50
-t = -3.009, Reject Ho
+H<sub>o</sub>: u >= 50
+H<sub>1</sub>: u < 50
+
+```{r}
+u = 50
+n = 200
+xbar = 44
+sd = 28.2
+t = (xbar - u) / (sd / sqrt(n))
+t
+pvalue = 2*pt(-abs(t),df=n-1)
+pvalue
+```
+
+t = -3.009, Reject H<sub>o</sub>
+
+b. Yes, I computed the t and p value
