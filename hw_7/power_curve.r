@@ -64,4 +64,3 @@ p<- plot_ly(temp, x=~temp$`effect size`, y=temp$power, type = 'scatter', color =
   layout(xaxis= list(title ="Effect size"),
          yaxis = list(title ="Power"))
 p
-
