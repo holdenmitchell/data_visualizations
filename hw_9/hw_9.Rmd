@@ -16,49 +16,216 @@ Risk and Return (group)
 
 #### 10-15
 
-b<sub>0</sub>: 0.96809
-b<sub>1</sub>: 16.0961
+```{r}
+inflation = c(1,2,12.6,-10.3,0.51,2.03,-1.8,5.79,5.87)
+return = c(-3,36,12,-8,53,-2,18,32,24)
+
+data = data.frame("inflation" = inflation, "return" = return)
+
+linearMod = lm(return ~ inflation, data = data)
+summary(linearMod)
+anova1 <- aov(linearMod)
+summary (anova1)
+plot(linearMod)
+```
+
+* Yes there is a linear relationship
+* 16.0961 + 0.9681x
+
 
 #### 10-21
 
-[0.1518, 0.2222]
+```{r}
+x = c(27,39,73,66,33,43,47,55,60,68,70,75,82)
+y = c(2,3,10,9,4,6,5,8,7,9,10,13,12)
+
+data = data.frame("x" = x, "y" = y)
+
+linearMod = lm(y ~ x, data = data)
+summary(linearMod)
+anova2 = anova(linearMod)
+summary(anova2)
+
+confint(linearMod,"x",level=0.95)
+```
+
+
+* [0.150, 0.222]
+* Zero is not plausible
 
 #### 10-39
 
-t = 0.0565, do not reject H<sub>0</sub>
+P = Avg. Price per share
+x_k = (X/k) contemporaneous earnings per share divided by firm-specific discount rate
+
+H<sub>0</sub>: B<sub>1</sub> = 0
+H<sub>1</sub>: B<sub>1</sub> \(\neq \) 0
+
+```{r}
+n = 213
+b1 = 0.68
+s_b1 = 12.03
+
+t = b1 / s_b1
+t
+```
+
+t = 0.0565, do not reject H<sub>0</sub>. Cannot determine linear relationship based on givens.
 
 #### 10-44
 
+Y = return on stocks
+X = market value
+
+```{r}
+n = 4921
+b1 = -0.0053
+s_b1 = 0.0019
+```
+
+a. H<sub>0</sub>: B<sub>0</sub> = 1  H<sub>1</sub>: B<sub>0</sub> \(\neq \) 1
+```{r}
+b1 / s_b1
+```
+b. t = -2.789474
+* Reject H<sub>0</sub>
+c. -2.789474
+d. yes
+e. a negative or inverse relationship
+f. The repatriation rate decreases as profitability increases
+g. There is a inverse relationship between a company's profitability and the repatriation rate. The null hypothesis was rejected because it is a linear relationship.
 
 #### 10-51
 
-a. need sample size to determine significance
-b. positive, linear relationship
-c. Model only explains 2.6% of the variation in call price
-d. No, would not use these results: r^2 is too small
+a. A smaple size is needed to determine significance
+b. It is a positive, linear relationship
+c. The model only explains 2.6% of the variation in call price
+d. No, r^2 is too small to use this model
 
 #### 10-63
 
 a. Heteroscedasticity
-b. No apparent inadequacy
-c. Data display curvature, not a linear relationship
+b. No model inadequacy
+c. Moel inadequacy, because the data shows a curve (not linear)
 
 #### 10-64
+
+a. No model inadequacy
+b. Yes, it increases with time
 
 #### 10-65
 
 a. No serious inadequacy
-b. Yes. A deviation from the normal-distribution assumption is apparent.
+b. Yes. A deviation is visable in the model.
 
 #### 10-66
 
+Produce residual plots for regression of problem 10-17. Is there any apparent model inadequency?
+```{r}
+quartile<-c(1,2,3,4,5)
+growth<-c(17.3,23.6,40.2,45.8,56.8)
+money<-data.frame(quartile,growth)
+linRegression<-lm(growth~quartile, data=money)
+rPlot<-resid(linRegression)
+plot(rPlot)
+```
+
+* Seems to have no correlation.
+
 #### 10-69
 
-6,551.35
-P.I.: [5,854.4, 7,248.3]
+```{r}
+miles = c(1211,1345,1422,1687,1849,2026,2133,2253,2400,2468,2699,2806,3082,3209,3466,3643,3852,4033,4267,4498,4533,4804,5090,5233,5439)
+dollars = c(1802,2405,2005,2511,2332,2305,3016,3385,3090,3694,3371,3998,3555,4692,4244,5298,4801,5147,5738,6420,6059,6426,6321,7026,6964)
+american=data.frame(miles, dollars)
+attach(american)
+express=lm(dollars~miles)
+prediction_1 = predict(express,data.frame(miles=5000), interval="prediction",
+                 level = 0.95)
+prediction_1
+
+prediction_2 = predict(express,data.frame(miles=4000), interval="prediction",
+                 level = 0.95)
+prediction_2
+```
+
+* The 4000 is lower for fit, lwr and upr
 
 #### 10-70
 
+99% prediction
+income quartile = 5
+
+```{r}
+predict(linRegression, data.frame(quartile=5), interval = "prediction", level = 0.99)
+```
+
+* See R output above
+
 #### 11-4
 
-#### Risk and Return
+```{r}
+value = c(345,238,452,422,328,375,660,466,290)
+size = c(1650,1870,2230,1740,1900,2000,3200,1860,1230)
+distance = c(3.5,0.5,1.5,4.5,1.8,0.1,3.4,3.0,1.0)
+home = data.frame("value" = value, "size" = size, "distance" = distance)
+
+multi = lm(value ~ size + distance)
+summary(multi)
+anov = anova(multi)
+anov
+```
+* y-intercept = -9.7997
+* -9.7997 + 0.1733 s + 31.094 d
+
+## Risk and Return
+
+
+```{r}
+market<-c(16.02,12.17,11.48,17.62,20.01,14,13.22,17.79,15.46,8.09,11,18.52,14.05,8.79,11.6)
+stock<-c(21.05,17.25,13.1,18.23,21.52,13.26,15.84,22.18,16.26,5.64,10.55,17.86,12.75,9.13,13.87)
+data<-data.frame(market,stock)
+attach(data)
+reg<-lm(stock~market,data=data)
+```
+#### 1)
+
+```{r}
+reg
+```
+
+\(\beta \) = 1.167
+* -1.091 + 1.167x
+
+#### 2)
+
+* The slope indicates that the stock is barely above the average risk.
+
+#### 3)
+
+```{r}
+confint(reg, "market",level=0.95)
+```
+* See r output above. No, the risk could be below average because the 2.5% is at 0.7929
+
+#### 4)
+
+```{r}
+predict(reg, data.frame(market=10), interval = "prediction")
+```
+* 10.57884
+
+#### 5)
+
+```{r}
+plot(resid(reg))
+```
+* Appears to have no correlation
+
+#### 6)
+
+```{r}
+plot(reg)
+```
+
+* Yes they appear to be normally distributed

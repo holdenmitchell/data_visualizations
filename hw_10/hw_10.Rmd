@@ -1,0 +1,93 @@
+---
+title: "hw_10"
+author: "Holden Mitchell"
+date: "11/8/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### 11-19
+
+a. Assume n = 50.
+Regression is: Return = 0.484 - 0.030 (Siz rnk) - 0.017 (Prc rnk)
+b. R^2 = 0.13. 13% of the variation is due to the two independent vaiables.
+c. Adj. R^2 is quite low; try regressing on size alone.
+
+#### 11-26
+
+#### 11-29
+
+Len seems insignificant because of collinearity with M<sub>1</sub> or Price
+
+#### 11-30
+
+a.
+b.
+c.
+d.
+e.
+f.
+
+
+#### 11-31
+
+profit = c(-1.2, -2.8, -0.2, 0.2)
+
+
+b<sub>0</sub> = 834.95
+b<sub>1</sub> = 0.0085
+b<sub>2</sub> = -0.1741
+R^2 = 0.3823
+F = 2.166
+Regression is not significant
+
+#### 11-37
+
+a. BV: t = 26.2 sig.
+  Inc: t = 37.809 sig.
+  Intercept: t = 0.2654 no sig.
+b. p-value < 0.001 for both independent variables
+c. Yes
+d. 91% of variation explained
+
+#### 11-46 
+
+#### 11-47
+
+An observation far from the others
+
+#### 11-48
+
+#### 11-50
+
+#### 11-51
+
+The estimators are the same although their standard errors are different
+
+#### 11-52
+
+#### 11-53
+
+#### 11-57
+
+Early investment is not statistically significant (or may be collinear with another variable). Rerun the regression without it. The dummy variables are both significant. Investment is significant.
+
+#### 11-59
+
+#### 11-63
+
+a. IndAnalPersp is the only variable that is significant
+b. p-value < 0.01
+c. interactive second-order term
+d. inverse relationship
+
+#### Return on Capital for Four Different Sectors (Group)
+
+```{r}
+
+banks = c('Bank of New York', 'Bank United', 'Comerica', 'Compass Bancshares', 'Fifth Third Bancorp', 'First Tennessee National', 'Firstar', 'Golden State Bancorp', 'Golden West Financial', 'Greenpoint Financial', 'Hibernia', 'M&T Bank', 'Marshall & Ilsley', 'Northern Trust', 'Old Kent Financial', 'PND Financial Services', 'SouthTrust', 'S')
+
+```
